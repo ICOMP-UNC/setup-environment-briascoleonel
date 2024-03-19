@@ -1,28 +1,23 @@
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR) #Version minima
 
 project(
-    "FirstProjectInCMake"
+    "lab0-setup"
     VERSION 1.2.0
     DESCRIPTION "CMake C Project Template for Operating Systems II"
     LANGUAGES C
 )
 
+#Habilita el testing
 include(CTest)
 
 #Establecer estandar de C 17 y se viene el 23 (podemos ver en cppreference.com)
 
 set(CMAKE_C_STANDARD 17)
 
-#Tengo que hacer include de cabecera
-#Diferencia entre dos include
-#include <header1.h> - buscan en system path 
-#include "header2.h" - busco en path especificado de forma local
 #Puedo enganar y ponerlo en la carpeta de include
-
 include_directories(include)
 
 #Definir donde va a buscar el codigo fuente
-
 include(FetchContent)
 set(UNITY_GIT_URL "https://github.com/ThrowTheSwitch/Unity.git")
 
@@ -46,7 +41,6 @@ file(GLOB_RECURSE SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 #Agregar librerias
-
 add_subdirectory(lib/libdyn)
 add_subdirectory(lib/libsta)
 

@@ -11,10 +11,6 @@ project(
 
 set(CMAKE_C_STANDARD 17)
 
-#Tengo que hacer include de cabecera
-#Diferencia entre dos include
-#include <header1.h> - buscan en system path 
-#include "header2.h" - busco en path especificado de forma local
 #Puedo enganar y ponerlo en la carpeta de include
 
 include_directories(include)
