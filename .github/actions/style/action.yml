@@ -13,14 +13,20 @@ runs:
 
         echo $PROJECT_PATH
 
-        # ToDo: Add documentation about 'tr' command and describe better this command
+        # #Documentation: https://linuxcommand.org/lc3_man_pages/tr1.html
+        # tr basically translated characters
+        # In this case, it translates the end of line  (\n) with a space
+        # Then this is written in the SOURCE_FILES
+        # It's checked in directiores src, include and lib
         SOURCE_FILES=$(find $PROJECT_PATH/src -type f \( -name "*.cpp" -or -name "*.hpp" -or -name "*.h" -or -name "*.c" \) | tr "\n" " ")
         SOURCE_FILES+=$(find $PROJECT_PATH/include -type f \( -name "*.cpp" -or -name "*.hpp" -or -name "*.h" -or -name "*.c" \) | tr "\n" " ")
         SOURCE_FILES+=$(find $PROJECT_PATH/lib -type f \( -name "*.cpp" -or -name "*.hpp" -or -name "*.h" -or -name "*.c" \) | tr "\n" " ")
 
         ERROR_FILE_FLAG=$PROJECT_PATH/clang-format_errors.txt
 
-        # ToDo: Add documentation and describe better this command
+        # It uses clang-format to format the SOURCE_FILES previosuly updated
+        # Then this is written in CLANG_COMMAND and it's redirected to ERROR_FILE_FLAG
+        # This flag is used later to check the format of the files
         CLANG_COMMAND=$(clang-format -i $SOURCE_FILES) > ${ERROR_FILE_FLAG}
 
         echo "Running: clang-format -i $SOURCE_FILES"
