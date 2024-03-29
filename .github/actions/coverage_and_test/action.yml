@@ -1,0 +1,52 @@
+name: "Test and coverage check"
+description: "Test and coverage check with gcovr, pass if coverage is greater than 20%"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Run coverage"
+      shell: bash
+      run: |
+        PROJECT_PATH=$(pwd)
+
+        #Documentation: https://cmake.org/cmake/help/latest/manual/ctest.1.html
+        #--output-on-failure
+        #Output anything outputted by the test program if the test should fail. 
+        #This option can also be enabled by setting the CTEST_OUTPUT_ON_FAILURE environment variable
+        #While first running this project I found the option to use this command, it basically shows you any output whenever the test fails
+
+        ctest --test-dir build/tests --output-on-failure
+
+        #Documentation: https://gcovr.com/en/stable/manpage.html
+        #gcovr is in charge of creating (G-generating) coverage reports 
+        #It provides a summary of the lines executed in the program, this coverage statitics help us discover untested parts of the program
+        #-r points to the root of the project, in this case $PROJECT_PATH and sends creates the coverage.txt file in the same directory
+
+        gcovr -r $PROJECT_PATH . > $PROJECT_PATH/coverage.txt
+
+        echo "Runnig: gcovr -r $PROJECT_PATH ."
+
+        cat $PROJECT_PATH/coverage.txt
+
+        # Find the value of correct coverage
+        #The command processes the coverage report previosuly created and saves it in COVERAGE_RESULT
+        #It contains the coverage percentage extracted from the cov report
+        #Taken from TOTAL, awk(percetange of coverage), and removes the symbol % with cut
+        COVERAGE_RESULT=$(grep "TOTAL" $PROJECT_PATH/coverage.txt | awk '{print $NF}' | cut -d '%' -f 1)
+
+        # Coverage lines GT 20
+        if [ "$(echo "$COVERAGE_RESULT > 20" | bc)" -eq 1 ]; then
+            echo "Coverage is greater than 20%. Nice!"
+            exit 0
+        else
+            echo "Error: Coverage is less than or equal to 20%"
+            exit 1
+        fi
+
+    # Upload errors as an artifact, when failed
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Tests or coverage errors!!!
+        path: $(pwd)/error_flag.txt
+        retention-days: 1

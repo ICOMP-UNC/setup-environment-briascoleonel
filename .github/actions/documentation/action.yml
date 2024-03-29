@@ -1,0 +1,46 @@
+name: "Doc check"
+description: "Code documentation generation with Doxygen"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Run doxygen command"
+      shell: bash
+      run: |
+          # We only make check, not changes
+          DOX_CONF_FILE=$(pwd)/Doxyfile
+
+          #It opens the Doxyfile configuration previously assigned to DOX_CONF_FILE
+          #Then a line is added (INPUT) to the doxy conf file, specifying the input directories for doxygen, as we can see it uses up directories src, include and lib 
+          #Then all this is redirected to DOX_CONF_FILE, it seems like it's a file update
+          {
+              cat $DOX_CONF_FILE
+              echo "INPUT" = $(pwd)/src $(pwd)/include $(pwd)/lib
+          } > $DOX_CONF_FILE
+
+          # Generate documentation
+          #Sets the variable to the path of the file /dox_errors.txt (I assume that this one is created once a dox error appears) 
+          sudo dot -c
+
+          ERROR_FILE_FLAG=$(pwd)/dox_errors.txt
+
+          # #Documentation: https://www.doxygen.nl/manual/
+          # It captures the output of doxygen using the file previously updated (DOX_CONF_FILE) using the suppress warnings flag 
+          # Then, it's redirected to the ERROR_FILE_FLAG variable
+          # We can see that this variable is used later to check if all the files were documented correctly.
+          DOXYGEN_COMMAND=$(doxygen -s $DOX_CONF_FILE) > $ERROR_FILE_FLAG
+
+          if [ -s $ERROR_FILE_FLAG ]; then
+              echo "Error: There are some files that are not documented correctly"
+              exit 1
+          else
+              echo "All files are documented correctly. Niiiceee"
+              exit 0
+          fi
+    # Upload errors as an artifact, when failed
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Doxygen errors!!!
+        path: $(pwd)/dox_errors.txt
+        retention-days: 1
