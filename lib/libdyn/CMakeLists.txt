@@ -19,6 +19,6 @@ include_directories(include)
 
 file(GLOB_RECURSE SOURCES "src/*.c")
 
-#Crear ejectuablr
-
+#Crear libreria
+#Especifico el tipo de libreria que voy a crear
 add_library(${PROJECT_NAME} SHARED ${SOURCES}) 

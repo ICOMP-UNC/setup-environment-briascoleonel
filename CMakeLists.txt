@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR) #Version minima
 
+#Especificamos nombre, version, descripcion y los lenguajes que se van a utilizar
 project(
     "lab0-setup"
     VERSION 1.2.0
@@ -34,19 +35,24 @@ FetchContent_Declare (
 #Cmake espera a que este el Unity 
 FetchContent_MakeAvailable(Unity)
 
+#Asi busca todos los archivos .c que esten en la carpeta src
+#Ventaja - No tengo que escribir los archivos uno por uno
+#Desventaja - Lo mismo, se me puede escapar alguno
 file(GLOB_RECURSE SOURCES "src/*.c")
 
 #Crear ejectuable
-
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 #Agregar librerias
+#Busca un CMakeLists.txt
 add_subdirectory(lib/libdyn)
 add_subdirectory(lib/libsta)
 
+#Le indica donde buscar otras cabeceras
 target_include_directories(${PROJECT_NAME} PUBLIC lib/libdyn/include)
 target_include_directories(${PROJECT_NAME} PUBLIC lib/libsta/include)
 
+#Linkeo librerias
 target_link_libraries(${PROJECT_NAME} StatiCLib DynamiCLib)
 
 
