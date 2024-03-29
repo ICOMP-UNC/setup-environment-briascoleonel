@@ -27,3 +27,13 @@
 
 # Dont track sonnar files
 .scannerwork/
+
+# Dont track CMakeFiles folder
+.CMakeFiles/
+
+.Testing/
+
+._deps/
+
+.tcl
+.cmake

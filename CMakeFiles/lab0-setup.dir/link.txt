@@ -1,1 +1,0 @@
-/usr/bin/cc "CMakeFiles/lab0-setup.dir/src/greetings.c.o" "CMakeFiles/lab0-setup.dir/src/logic.c.o" "CMakeFiles/lab0-setup.dir/src/main.c.o" -o lab0-setup  -Wl,-rpath,/home/leonel/Escritorio/SOII/Clase1/lib/libdyn lib/libsta/libStatiCLib.a lib/libdyn/libDynamiCLib.so 
